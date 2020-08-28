@@ -1,14 +1,14 @@
-# 1. JDBC를 사용해서 데이터 읽고 쓰기
+# JDBC를 사용해서 데이터 읽고 쓰기
    
 ## 알아둘 것
    
-**1-1. JDBC ?**  
+**1. JDBC ?**  
 : Java Database Connectivity, 자바에서 데이터베이스로 접근하게 해주는 API이다. 쉽게 말해 자바로 데이터를 CRUD 할 수 있게 해주는 애
    
-**1-2. JdbcTemplate ?**     
+**2. JdbcTemplate ?**     
 : JDBC를 지원해주는 클래스
 
-**1-2-1. JdbcTemplate를 사용하지 않고 DB 쿼리**
+**2-1. JdbcTemplate를 사용하지 않고 DB 쿼리**
 [참고](https://happynewmind.tistory.com/55)
 ```java
 @Override
@@ -51,7 +51,7 @@ try{
    return null;
 }
 ```
-**1-2-2. JdbcTemplate 이용해서 DB 쿼리하기**
+**2-2. JdbcTemplate 이용해서 DB 쿼리하기**
 ```java
 private JdbcTemplate jdbc;
 
