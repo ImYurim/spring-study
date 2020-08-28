@@ -15,10 +15,10 @@ public Ingredient findById(String id){
    ResultSet resultSet = null;
 try{
    connection = dataSource.getConnection();
-   statement = connection.prepareStatement(
-      "select id , name, type from Ingredient shere id = ?");
-   statement.setString(1,id);
-   resultSet = statement.executeQuery();
+   statement = connection.prepareStatement(                          //prepareStatement 생성
+      "select id , name, type from Ingredient shere id = ?");        //물음표 값 나중에 넣겠다. 쿼리문 재사용할거다!
+   statement.setString(1,id);                                        //쿼리문의 첫번째 물음표에 id를 넣겠다!
+   resultSet = statement.executeQuery();                               //쿼리 실행
    Ingredient = ingredient = null;
    if (resultSet.next()){
       ingredient = new Ingredient(
@@ -28,7 +28,7 @@ try{
 }
    return ingredient;
 } catch (SQLException e){
-} finally {
+} finally {                                                          //prepareStatement 닫기
    if (resultSet != null){
       try {
          resultSet.close();
