@@ -57,7 +57,7 @@ private JdbcTemplate jdbc;
 
 @Override
 public Ingredient findById(String id){
-   return jdbc.queryForObject(
+   return jdbc.queryForObject(								//쿼리 실행결과가 1개일때 queryForObject() 사용, 여러개면 query()사용
       "select id, name, type from Ingredient shere id =?"
       this::mapRowToIngredient, id);
 }
@@ -157,7 +157,7 @@ public class JdbcIngredientRepository implements IngredientRepository {			//3-1�
 
 	@Override
 	  public Iterable<Ingredient> findAll() {
-	    return jdbc.query("select id, name, type from Ingredient",
+	    return jdbc.query("select id, name, type from Ingredient",			//jdbc.query함수는 List형태로 쿼리결과를 return, 
 	      this::mapRowToIngredient);
 	  }
 
