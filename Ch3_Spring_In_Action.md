@@ -84,7 +84,7 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
 1. setting
 - dependency 설정 : jdbctemplate 와 h2databse(내장 데이터베이스)
   
-2. 도메인 수정
+2. 도메인 수정(식별자 id 만들어줌)    
 : Taco, Order 수정
 **main/tacos/Taco.java**
 ```java
