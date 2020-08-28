@@ -68,8 +68,9 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
          Ingredient.Type.valueOf(rs.getString("type")));
 }
 ```
+
+**JdbcTemplate을 안 썼을 때**
 ```
-JdbcTemplate을 안 썼을 때
 - 쿼리문, 연결 담는 객체 생성 안했다.
 - 결과 담는 객체는 있음! (mapRowToIngredient함수가 만들어줌)
 - 예외 처리하는 catch도 없다.
