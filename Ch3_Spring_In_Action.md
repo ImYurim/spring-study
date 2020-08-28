@@ -7,6 +7,7 @@
 : JDBC를 지원해주는 클래스
 
 **1-2-1. JdbcTemplate를 사용하지 않고 DB 쿼리**
+[참고](https://happynewmind.tistory.com/55)
 ```java
 @Override
 public Ingredient findById(String id){
