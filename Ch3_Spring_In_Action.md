@@ -95,7 +95,7 @@ public class Taco {
 	private Long id;
 	private Date createdAt;
 
-'''
+...
 }
 ```
 **main/tacos/Order.java**
