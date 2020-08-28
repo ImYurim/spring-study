@@ -113,7 +113,8 @@ public class Order {
 ```
 
 3. 리퍼지터리 생성  
-3-1. IngredientRepository  
+3-1. IngredientRepository   
+:인터페이스 생성 [참고](https://wikidocs.net/217)
 **#main/data/IngredientRepository.java**
 ```java
 package tacos.data;
@@ -127,6 +128,63 @@ public interface IngredientRepository {
 	Ingredient findById(String id);
 
 	Ingredient save(Ingredient ingredient);
+
+}
+```
+3-2. JdbcIngredientRepository  
+```java
+package tacos.data;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import tacos.Ingredient;
+
+@Repository										//Component annotation 중 db 관련 annotation
+public class JdbcIngredientRepository implements IngredientRepository {			//3-1에서 구현한 ingredientRepository 인터페이스 구현
+
+	private JdbcTemplate jdbc;
+
+	@Autowired									//Autowired annotation으로 jdbcTemplate에 연결
+	public JdbcIngredientRepository(JdbcTemplate jdbc) {
+	  this.jdbc = jdbc;
+	}
+
+	@Override
+	  public Iterable<Ingredient> findAll() {
+	    return jdbc.query("select id, name, type from Ingredient",
+	      this::mapRowToIngredient);
+	  }
+
+	  @Override
+	  public Ingredient findById(String id) {
+	    return jdbc.queryForObject(
+	      "select id, name, type from Ingredient where id=?",
+	        this::mapRowToIngredient, id);
+	  }
+
+	  private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
+	    throws SQLException {
+	      return new Ingredient(
+		    rs.getString("id"),
+		    rs.getString("name"),
+		    Ingredient.Type.valueOf(rs.getString("type")));
+	  }
+
+	  @Override
+	  public Ingredient save(Ingredient ingredient) {
+	    jdbc.update(
+	        "insert into Ingredient (id, name, type) values (?, ?, ?)",
+	        ingredient.getId(),
+	        ingredient.getName(),
+	        ingredient.getType().toString());
+	    return ingredient;
+	  }
 
 }
 ```
