@@ -6,7 +6,7 @@
 **1-2. JdbcTemplate ?**     
 : JDBC를 지원해주는 클래스
 
-1-2-1. JdbcTemplate를 사용하지 않고 DB 쿼리
+**1-2-1. JdbcTemplate를 사용하지 않고 DB 쿼리**
 ```java
 @Override
 public Ingredient findById(String id){
@@ -46,5 +46,24 @@ try{
       }
    }
    return null;
+}
+```
+**1-2-2. JdbcTemplate 이용해서 DB 쿼리하기**
+```java
+private JdbcTemplate jdbc;
+
+@Override
+public Ingredient findById(String id){
+   return jdbc.queryForObject(
+      "select id, name, type from Ingredient shere id =?"
+      this::mapRowToIngredient, id);
+}
+
+private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
+   throws SQLException{
+      return new Ingredient(
+         rs.getString("id"),
+         rs.getString("name"),
+         Ingredient.Type.valueOf(rs.getString("type")));
 }
 ```
