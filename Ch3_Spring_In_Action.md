@@ -21,7 +21,7 @@ try{
    statement.setString(1,id);                                        //쿼리문의 첫번째 물음표에 id를 넣겠다!
    resultSet = statement.executeQuery();                               //쿼리 실행
    Ingredient = ingredient = null;
-   if (resultSet.next()){
+   if (resultSet.next()){                                            //다음 레코드 읽기(여기서는 1번째 레코드 읽는것,처음에 resultSet은 0번째를 가리키고 있음)
       ingredient = new Ingredient(
          resultSet.getString("id"),
          resultSet.getString("name").
