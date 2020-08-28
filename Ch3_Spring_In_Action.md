@@ -158,8 +158,8 @@ public class JdbcIngredientRepository implements IngredientRepository {			//3-1�
 	@Override
 	  public Iterable<Ingredient> findAll() {
 	    return jdbc.query("select id, name, type from Ingredient",			//jdbc.query함수는 List형태로 쿼리결과를 return, 
-	      this::mapRowToIngredient);
-	  }
+	      this::mapRowToIngredient);						//쿼리 결과 행 개수만큼 호출됨. 한 번 호출할 때 마다 ingredient 객체 생성
+	  }										//모든 객체 만들어지면 List로 return됨
 
 	  @Override
 	  public Ingredient findById(String id) {
