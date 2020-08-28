@@ -81,5 +81,8 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
     
     
 ### 프로젝트 적용
-1. 도메인
+1. setting
+- dependency 설정 : jdbctemplate 와 h2databse
+  
+2. 도메인 수정
 : Taco, Order 수정
