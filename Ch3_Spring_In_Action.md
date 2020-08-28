@@ -88,7 +88,7 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
 : Taco, Order 수정
 **main/tacos/Taco.java**
 ```java
-'''
+...
 @Data
 public class Taco {
 	
@@ -100,13 +100,13 @@ public class Taco {
 ```
 **main/tacos/Order.java**
 ```java
-'''
+...
 @Data
 public class Order {
 	
 	private Long id;
 	private Date placedAt;
-'''
+...
 }
 ```
 
