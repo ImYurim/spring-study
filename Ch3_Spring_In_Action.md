@@ -112,5 +112,20 @@ public class Order {
 
 3. 리퍼지터리 생성  
 3-1. IngredientRepository
+**main/data/IngredientRepository.java
+```java
+package tacos.data;
 
+import tacos.Ingredient;
+
+public interface IngredientRepository {
+
+	Iterable<Ingredient> findAll();
+
+	Ingredient findById(String id);
+
+	Ingredient save(Ingredient ingredient);
+
+}
+```
 
