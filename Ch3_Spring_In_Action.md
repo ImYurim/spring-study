@@ -1,6 +1,6 @@
-## 1. JDBC를 사용해서 데이터 읽고 쓰기
+# 1. JDBC를 사용해서 데이터 읽고 쓰기
    
-### 알아둘 것
+## 알아둘 것
    
 **1-1. JDBC ?**  
 : Java Database Connectivity, 자바에서 데이터베이스로 접근하게 해주는 API이다. 쉽게 말해 자바로 데이터를 CRUD 할 수 있게 해주는 애
@@ -80,7 +80,7 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
   
     
     
-### 프로젝트 적용
+## 프로젝트 적용
 1. setting
 - dependency 설정 : jdbctemplate 와 h2databse(내장 데이터베이스)
   
@@ -110,7 +110,7 @@ public class Order {
 }
 ```
 
-3. 리퍼지터리 생성
+3. 리퍼지터리 생성  
 3-1. IngredientRepository
 
 
