@@ -110,5 +110,7 @@ public class Order {
 }
 ```
 
+3. 리퍼지터리 생성
+3-1. IngredientRepository
 
 
