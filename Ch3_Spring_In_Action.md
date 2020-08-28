@@ -114,7 +114,7 @@ public class Order {
 
 3. 리퍼지터리 생성  
 3-1. IngredientRepository   
-:인터페이스 생성 [참고](https://wikidocs.net/217)
+:인터페이스 생성 [참고](https://wikidocs.net/217)  
 **#main/data/IngredientRepository.java**
 ```java
 package tacos.data;
