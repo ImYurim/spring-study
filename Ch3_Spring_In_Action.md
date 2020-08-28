@@ -86,3 +86,15 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
   
 2. 도메인 수정
 : Taco, Order 수정
+```
+package tacos;
+'''
+@Data
+public class Taco {
+	
+	private Long id;
+   private Date createdAt;
+
+'''
+}
+```
