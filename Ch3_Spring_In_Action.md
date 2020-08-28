@@ -81,4 +81,5 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
     
     
 ### 프로젝트 적용
-
+1. 도메인
+: Taco, Order 수정
