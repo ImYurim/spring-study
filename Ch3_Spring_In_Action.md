@@ -1,5 +1,7 @@
 ## 1. JDBC를 사용해서 데이터 읽고 쓰기
    
+### 알아둘 것
+   
 **1-1. JDBC ?**  
 : Java Database Connectivity, 자바에서 데이터베이스로 접근하게 해주는 API이다. 쉽게 말해 자바로 데이터를 CRUD 할 수 있게 해주는 애
    
@@ -75,5 +77,7 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
 - 결과 담는 객체는 있음! (mapRowToIngredient함수가 만들어줌)
 - 예외 처리하는 catch도 없다.
 ```
-
+   
+      
+### 프로젝트 적용
 
