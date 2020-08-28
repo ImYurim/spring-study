@@ -23,12 +23,12 @@ try{
    Ingredient = ingredient = null;
    if (resultSet.next()){                                            //다음 레코드 읽기(여기서는 1번째 레코드 읽는것,처음에 resultSet은 0번째를 가리키고 있음)
       ingredient = new Ingredient(
-         resultSet.getString("id"),
+         resultSet.getString("id"),                                  //첫번째 레코드의 id값가져와서 Ingredient 객체에 넣어줌
          resultSet.getString("name").
          Ingredient.Type.valueOf(resultSet.getString("type")));
 }
    return ingredient;
-} catch (SQLException e){
+} catch (SQLException e){                                            //DB 연결,쿼리문, 결과 오류 잡기
 } finally {                                                          //prepareStatement 닫기
    if (resultSet != null){
       try {
