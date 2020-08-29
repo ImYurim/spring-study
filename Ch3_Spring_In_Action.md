@@ -199,7 +199,7 @@ public class JdbcIngredientRepository implements IngredientRepository {			//3-1�
 ```
 - classpath 루트 경로에 schema.sql 생성 (src/main/resources폴더에)
 ```
-```java
+```sql
 create table if not exists Ingredient (
   id varchar(4) not null,
   name varchar(25) not null,
@@ -249,7 +249,7 @@ alter table Taco_Order_Tacos
 ```
 - src/main/resource 폴더에 data.sql 파일 생성 후 insert 이용해서 데이터 추가
 ```
-```java
+```sql
 delete from Taco_Order_Tacos;
 delete from Taco_Ingredients;
 delete from Taco;
