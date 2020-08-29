@@ -366,7 +366,7 @@ public class JdbcTacoRepository implements TacoRepository {
 }
 ```
 3-5-2. OrderRepository   
-``java
+```java
 package tacos.data;
 
 import tacos.Order;
