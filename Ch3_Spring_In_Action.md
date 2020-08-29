@@ -132,6 +132,7 @@ public interface IngredientRepository {
 }
 ```
 3-2. JdbcIngredientRepository  
+: ingredient 데이터 가져오고 저장하는 함수들 정의.  
 ```java
 package tacos.data;
 
@@ -177,15 +178,15 @@ public class JdbcIngredientRepository implements IngredientRepository {			//3-1�
 	  }
 
 	  @Override
-	  public Ingredient save(Ingredient ingredient) {
+	  public Ingredient save(Ingredient ingredient) {				//쿼리 결과를 저장
 	    jdbc.update(
 	        "insert into Ingredient (id, name, type) values (?, ?, ?)",
-	        ingredient.getId(),
-	        ingredient.getName(),
-	        ingredient.getType().toString());
+	        ingredient.getId(),							//첫번째 물음표에 들어갈 값
+	        ingredient.getName(),							//두번째
+	        ingredient.getType().toString());					//세번째
 	    return ingredient;
 	  }
 
 }
 ```
-
+3-3. chapter2에서
