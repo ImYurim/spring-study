@@ -189,4 +189,5 @@ public class JdbcIngredientRepository implements IngredientRepository {			//3-1�
 
 }
 ```
-3-3. chapter2에서 하드코
+3-3. chapter2에서 하드코딩 했던 ingredients List를 삭제해주기, 데이터 다루는 함수 정의해 놓은 IngredientRepository 객체 생성해주고 DB에서 ingredient 가져와서 List만들어주기
+
