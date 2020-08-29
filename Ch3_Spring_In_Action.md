@@ -277,3 +277,39 @@ insert into Ingredient (id, name, type)
 insert into Ingredient (id, name, type)
     values ('SRCR', 'Sour Cream', 'SAUCE');
 ```
+3-5. Taco 정보와 주문 정보 저장해 주는 함수 필요
+```
+- TacoRepository 만들기 (같이 미리 고려해야할 것 : Taco를 만드는 식재료도 같이 Taco_Ingredients 테이블에 저장해야함!)
+- OrderRepository 만들기 (같이 미리 고려해야할 것 : 주문 들어오면 어떤 타코들인지 정보도 Taco_Order_Tacos 테이블에 저장해야함!)
+```
+3-5-1. Taco 정보 저장해주기   
+3-5-1-1. TacoRepository   
+: Taco 정보 저장해 줄 함수 적은 인터페이스
+```java
+package tacos.data;
+
+import tacos.Taco;
+
+public interface TacoRepository {
+
+	Taco save(Taco design);
+	
+}
+```
+3-5-1-2. JdbcTacoRepository   
+: TacoRepository(3-5-1-1)의 save함수 구현   
+```java
+
+```
+3-5-2. OrderRepository   
+``java
+package tacos.data;
+
+import tacos.Order;
+
+public interface OrderRepository {
+
+	Order save(Order order);
+	
+}
+```
