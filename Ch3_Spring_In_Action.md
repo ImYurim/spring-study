@@ -189,4 +189,4 @@ public class JdbcIngredientRepository implements IngredientRepository {			//3-1�
 
 }
 ```
-3-3. chapter2에서
+3-3. chapter2에서 하드코
