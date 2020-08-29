@@ -189,11 +189,91 @@ public class JdbcIngredientRepository implements IngredientRepository {			//3-1�
 
 }
 ```
-3-3. DesignTacoController 수정   
+3-3. DesignTacoController 수정(p83)   
 ```
 - chapter2에서 하드코딩 했던 ingredients List를 삭제해주기  
 - 데이터 다루는 함수 쓰기 위해 IngredientRepository 객체 생성해주기  
 - DB에서 ingredient 가져와서 List만들어주기  
 ```
+3-4. Table 정의
+```
+- classpath 루트 경로에 schema.sql 생성 (src/main/resources폴더에)
+```
+```java
+create table if not exists Ingredient (
+  id varchar(4) not null,
+  name varchar(25) not null,
+  type varchar(10) not null
+);
 
+create table if not exists Taco (
+  id identity,
+  name varchar(50) not null,
+  createdAt timestamp not null
+);
 
+create table if not exists Taco_Ingredients (
+  taco bigint not null,
+  ingredient varchar(4) not null
+);
+
+alter table Taco_Ingredients
+    add foreign key (taco) references Taco(id);
+alter table Taco_Ingredients
+    add foreign key (ingredient) references Ingredient(id);
+
+create table if not exists Taco_Order (
+  id identity,
+  deliveryName varchar(50) not null,
+  deliveryStreet varchar(50) not null,
+  deliveryCity varchar(50) not null,
+  deliveryState varchar(2) not null,
+  deliveryZip varchar(10) not null,
+  ccNumber varchar(16) not null,
+  ccExpiration varchar(5) not null,
+  ccCVV varchar(3) not null,
+  placedAt timestamp not null
+);
+
+create table if not exists Taco_Order_Tacos (
+  tacoOrder bigint not null,
+  taco bigint not null
+);
+
+alter table Taco_Order_Tacos
+    add foreign key (tacoOrder) references Taco_Order(id);
+alter table Taco_Order_Tacos
+    add foreign key (taco) references Taco(id);
+```
+3-5. Data 저장
+```
+- src/main/resource 폴더에 data.sql 파일 생성 후 insert 이용해서 데이터 추가
+```
+```java
+delete from Taco_Order_Tacos;
+delete from Taco_Ingredients;
+delete from Taco;
+delete from Taco_Order;
+
+delete from Ingredient;
+insert into Ingredient (id, name, type)
+    values ('FLTO', 'Flour Tortilla 토르티아', 'WRAP');
+insert into Ingredient (id, name, type)
+    values ('COTO', 'Corn Tortilla', 'WRAP');
+insert into Ingredient (id, name, type)
+    values ('GRBF', 'Ground Beef', 'PROTEIN');
+insert into Ingredient (id, name, type)
+    values ('CARN', 'Carnitas', 'PROTEIN');
+insert into Ingredient (id, name, type)
+    values ('TMTO', 'Diced Tomatoes', 'VEGGIES');
+insert into Ingredient (id, name, type)
+    values ('LETC', 'Lettuce', 'VEGGIES');
+insert into Ingredient (id, name, type)
+    values ('CHED', 'Cheddar', 'CHEESE');
+insert into Ingredient (id, name, type)
+    values ('JACK', 'Monterrey Jack', 'CHEESE');
+insert into Ingredient (id, name, type)
+    values ('SLSA', 'Salsa', 'SAUCE');
+insert into Ingredient (id, name, type)
+    values ('SRCR', 'Sour Cream', 'SAUCE');
+```
