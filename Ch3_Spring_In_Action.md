@@ -601,9 +601,9 @@ public class JdbcOrderRepository implements OrderRepository {
 	}
 
 	@Override
-	public Order save(Order order) {
-	  order.setPlacedAt(new Date());
-	  long orderId = saveOrderDetails(order);
+	public Order save(Order order) {						//Order 정보 저장하는 save함수 구현
+	  order.setPlacedAt(new Date());						//브라우저에서 Order 정보 받아올 때 시간 정보는 받지 않으므로 시스템에서 해줘야함
+	  long orderId = saveOrderDetails(order);					//브라우저에서 받은 Order정보를 DB에 저장해주는 saveOrderDetails함수 실행
 	  order.setId(orderId);
 	  List<Taco> tacos = order.getTacos();
 	  
@@ -614,25 +614,76 @@ public class JdbcOrderRepository implements OrderRepository {
 	  return order;
 	}
 
-	private long saveOrderDetails(Order order) {
+	private long saveOrderDetails(Order order) {					
 	  @SuppressWarnings("unchecked")
-	  Map<String, Object> values =
+	  Map<String, Object> values =							//브라우저에서 받은 Order 객체의 정보를 Map 객체 생성해서 Map에 넣어줌
 	      objectMapper.convertValue(order, Map.class);
-	  values.put("placedAt", order.getPlacedAt());
+	  values.put("placedAt", order.getPlacedAt());					//Map으로 변환하는 과정에서 placedAt이 타입이 long으로 바뀌기 때문에 위에서 정의해준 Date 타입이 아니므로 위에서 생성해준 PlacedAt 데이터를 가져와서 그걸로 Map의 PlacedAt를 바꿔줘야함
 
 	  long orderId =
 	      orderInserter
-	          .executeAndReturnKey(values)
-	          .longValue();
-	  return orderId;
+	          .executeAndReturnKey(values)						//저 위에서 만들어줬던 Taco_Order 테이블에 데이터 추가하는데 사용하는 orderInserter 실행
+	          .longValue();					//executeAndReturnKey 함수 실행 결과 DB에서 자동생성해주는 Id를 Number 객체로 return, 그걸 long 타입으로 변환
+	  return orderId;					
 	}
 
-	private void saveTacoToOrder(Taco taco, long orderId) {
-	  Map<String, Object> values = new HashMap<>();
-	  values.put("tacoOrder", orderId);
+	private void saveTacoToOrder(Taco taco, long orderId) {				//Taco_Order_Tacos 테이블에 data저장하는 함수
+	  Map<String, Object> values = new HashMap<>();					//Map 인스턴스를 생성
+	  values.put("tacoOrder", orderId);						//orderid값을 Map에 tacoOrder column에 넣음
 	  values.put("taco", taco.getId());
-	  orderTacoInserter.execute(values);
+	  orderTacoInserter.execute(values);						//DB에 저장
 	}
+
+}
+```
+3-3. OrderController 수정   
+```java
+package tacos.web;
+
+import javax.validation.Valid;
+
+import org.springframework.validation.Errors;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+
+import lombok.extern.slf4j.Slf4j;
+import tacos.Order;
+import tacos.data.OrderRepository;
+
+@Slf4j
+@Controller
+@RequestMapping("/orders")
+@SessionAttributes("order")						//한 주문에 여러개 Taco 정보를 담고 있어야 하므로 session 필요
+public class OrderController {
+
+	private OrderRepository orderRepo;
+
+	public OrderController(OrderRepository orderRepo) {
+	  this.orderRepo = orderRepo;
+	}
+
+	@GetMapping("/current")
+	  public String orderForm() {
+	    return "orderForm";
+	  }
+
+	@PostMapping
+	  public String processOrder(@Valid Order order, 
+			  Errors errors, SessionStatus sessionStatus) {
+		if (errors.hasErrors()) {
+		    return "orderForm";
+		}
+
+		orderRepo.save(order);						//주문 DB저장
+	    sessionStatus.setComplete();					//한 주문이 끝나면 session clear해줌
+
+	    return "redirect:/";
+	  }
 
 }
 ```
