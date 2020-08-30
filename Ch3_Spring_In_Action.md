@@ -380,6 +380,8 @@ public class JdbcTacoRepository implements TacoRepository {
 1. DesignController가 위에서 만든 TacoRepository 사용할 수 있게 연결시켜주기
 2. taco 모델과 order모덷 생성해주기
 3. order은 taco여러개를 주문하는 경우 한 주문에 여러개 타코 정보가 들어가므로 이때 여러번의 HTTP 요청이 발생한다 -> sessionAttributes 어노테이션을 써줌
+4. 브라우저에서 받은 Taco 정보를 유효성 검사하고 DB에 저장
+5. 이 Taco 객체를 Order 객체에도 넣어줌
 ```
 ```java
 package tacos.web;
@@ -464,14 +466,14 @@ public class DesignTacoController {
 
 	  @PostMapping
 	  public String processDesign(
-			  @Valid Taco design, 
-			  Errors errors, @ModelAttribute Order order) {
+			  @Valid Taco design, 							//4. 브라우저에서 Taco주문 시 Taco정보 입력한 것을 유효성 검사
+			  Errors errors, @ModelAttribute Order order) {				
 		  if (errors.hasErrors()) {
 			 return "design";
 		  }
 
-		  Taco saved = tacoRepo.save(design);
-		  order.addDesign(saved);
+		  Taco saved = tacoRepo.save(design);	//4. 3-5-1-2(바로위) 에서 구현했던 save함수를 사용해서 입력받은 Taco정보를 db에 저장 후(return Taco) saved 변수에 저장  
+		  order.addDesign(saved);			//5. order객체에 Taco객체 저장
 
 		  return "redirect:/orders/current";
 	  }
