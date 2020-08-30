@@ -81,12 +81,10 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
     
     
 ## 프로젝트 적용
-: DesignController에서 ingredient를 정의해 주는거 말고 DB에서 가져와 볼 것이다!   
-  
-1. setting
+* setting
 - dependency 설정 : jdbctemplate 와 h2databse(내장 데이터베이스)
   
-2. 도메인 수정(식별자 id 만들어줌)    
+* 도메인 수정(식별자 id 만들어줌)    
 : Taco, Order 수정. 
 **#main/tacos/Taco.java**
 ```java
@@ -111,9 +109,10 @@ public class Order {
 ...
 }
 ```
+1. Ingredient
+: DesignController에서 ingredient를 정의해 주는거 말고 DB에서 가져와 볼 것이다!   
 
-3. 리퍼지터리 생성  
-3-1. IngredientRepository   
+1-1. IngredientRepository   
 :인터페이스 생성 [참고](https://wikidocs.net/217)  
 **#main/data/IngredientRepository.java**
 ```java
@@ -131,7 +130,7 @@ public interface IngredientRepository {
 
 }
 ```
-3-2. JdbcIngredientRepository  
+1-2. JdbcIngredientRepository  
 : ingredient 데이터 가져오고 저장하는 함수들 정의.  
 ```java
 package tacos.data;
@@ -189,13 +188,14 @@ public class JdbcIngredientRepository implements IngredientRepository {			//3-1�
 
 }
 ```
-3-3. DesignTacoController 수정(p83)   
+1-3. DesignTacoController 수정(p83)   
 ```
 - chapter2에서 하드코딩 했던 ingredients List를 삭제해주기  
 - 데이터 다루는 함수 쓰기 위해 IngredientRepository 객체 생성해주기  
 - DB에서 ingredient 가져와서 List만들어주기  
 ```
-3-4. Table 정의
+
+* Table 정의
 ```
 - classpath 루트 경로에 schema.sql 생성 (src/main/resources폴더에)
 ```
@@ -277,13 +277,8 @@ insert into Ingredient (id, name, type)
 insert into Ingredient (id, name, type)
     values ('SRCR', 'Sour Cream', 'SAUCE');
 ```
-3-5. Taco 정보와 주문 정보 저장해 주는 함수 필요
-```
-- TacoRepository 만들기 (같이 미리 고려해야할 것 : Taco를 만드는 식재료도 같이 Taco_Ingredients 테이블에 저장해야함!)
-- OrderRepository 만들기 (같이 미리 고려해야할 것 : 주문 들어오면 어떤 타코들인지 정보도 Taco_Order_Tacos 테이블에 저장해야함!)
-```
-3-5-1. Taco 정보 저장해주기   
-3-5-1-1. TacoRepository   
+2. Taco 
+2-1. TacoRepository   
 : Taco 정보 저장해 줄 함수 적은 인터페이스
 ```java
 package tacos.data;
@@ -296,7 +291,7 @@ public interface TacoRepository {
 	
 }
 ```
-3-5-1-2. JdbcTacoRepository   
+2-2. JdbcTacoRepository   
 : TacoRepository(3-5-1-1)의 save함수 구현   
 ```
 상황
@@ -374,7 +369,7 @@ public class JdbcTacoRepository implements TacoRepository {
 
 }
 ```
-3-5-1-3. DesignController 파일 수정 
+2-3. DesignController 파일 수정 
 ```
 할일 
 1. DesignController가 위에서 만든 TacoRepository 사용할 수 있게 연결시켜주기
@@ -480,7 +475,7 @@ public class DesignTacoController {
 
 }
 ```
-3-5-1-4. Order 도메인 수정    
+2-4. Order 도메인 수정    
 : addDesign 함수 추가해줌(바로 위 코드에서 오류났던것)   
 ```java
 package tacos;
@@ -536,7 +531,7 @@ public class Order {
 
 }
 ```
-3-5-2. Order   
+3. Order   
 ```
 할일
 - Taco 정보를 DB에 저장해줬던 것과 마찬가지로 Taco_Order 테이블에 주문에만 관련된 데이터를 저장해주고 
@@ -545,7 +540,7 @@ public class Order {
 다룰 것
 - Taco 정보를 DB에 입력해줄때 아까 PreparedStatementCreator를 썼다면 지금은 좀 더 쉬운 SimpleJdbcInsert를 사용할 것이다.
 ``` 
-3-5-2-1. OrderRepository   
+3-1. OrderRepository   
 : Order 정보를 저장해주는 함수를 적은 인터페이스 
 ```java
 package tacos.data;
@@ -558,7 +553,7 @@ public interface OrderRepository {
 	
 }
 ```
-3-5-2-2. JdbcOrderRepository   
+3-2. JdbcOrderRepository   
 : Order의 save함수 구현   
 ```java
 package tacos.data;
