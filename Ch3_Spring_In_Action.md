@@ -82,7 +82,7 @@ private Ingredient mapRowToIngredient(ResultSet rs, int rowNum)
     
 ## 프로젝트 적용
 * setting
-- dependency 설정 : jdbctemplate 와 h2databse(내장 데이터베이스)
+-> dependency 설정 : jdbctemplate 와 h2databse(내장 데이터베이스)
   
 * 도메인 수정(식별자 id 만들어줌)    
 : Taco, Order 수정. 
@@ -109,6 +109,14 @@ public class Order {
 ...
 }
 ```
+
+```
+패턴
+- ingredient 데이터 다룰 함수들 간단히 적은 interface 생성 (IngredientRepository)
+- interface에 적은 함수들 JdbcingredientRepository에 구현
+- DesignController에 주입
+```
+
 1. Ingredient
 : DesignController에서 ingredient를 정의해 주는거 말고 DB에서 가져와 볼 것이다!   
 
