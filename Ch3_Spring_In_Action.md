@@ -374,6 +374,110 @@ public class JdbcTacoRepository implements TacoRepository {
 
 }
 ```
+3-5-1-3. DesignController 파일 수정 
+```
+할일 
+1. DesignController가 위에서 만든 TacoRepository 사용할 수 있게 연결시켜주기
+2. taco 모델과 order모덷 생성해주기
+3. order은 taco여러개를 주문하는 경우 한 주문에 여러개 타코 정보가 들어가므로 이때 여러번의 HTTP 요청이 발생한다 -> sessionAttributes 어노테이션을 써줌
+```
+```java
+package tacos.web;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.springframework.validation.Errors;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+import tacos.Order;
+import tacos.data.IngredientRepository;
+
+
+import lombok.extern.slf4j.Slf4j;
+import tacos.Taco;
+import tacos.Ingredient;
+import tacos.Ingredient.Type;
+import tacos.data.TacoRepository;
+
+@Slf4j
+@Controller
+@RequestMapping("/design")
+@SessionAttributes("order")										//3. order은 여러번의 http 요청 발생하므로 이 어노테이션을 
+public class DesignTacoController {
+
+	private final IngredientRepository ingredientRepo;
+	
+	private TacoRepository tacoRepo;								//1. tocorepository 연결
+
+	@Autowired
+	public DesignTacoController(
+			IngredientRepository ingredientRepo, TacoRepository tacoRepo) {
+	  this.ingredientRepo = ingredientRepo;
+	  this.tacoRepo = tacoRepo;
+	}
+
+	@GetMapping
+	  public String showDesignForm(Model model) {
+	    
+		List<Ingredient> ingredients = new ArrayList<>();
+	    ingredientRepo.findAll().forEach(i -> ingredients.add(i));
+
+	    Type[] types = Ingredient.Type.values();
+	    for (Type type : types) {
+	      model.addAttribute(type.toString().toLowerCase(),
+	          filterByType(ingredients, type));
+	    }
+
+	    model.addAttribute("taco", new Taco());
+
+	    return "design";
+	  }
+	
+	  private List<Ingredient> filterByType(
+	      List<Ingredient> ingredients, Type type) {
+	    return ingredients
+	              .stream()
+	              .filter(x -> x.getType().equals(type))
+	              .collect(Collectors.toList());
+	  }
+
+	  @ModelAttribute(name = "order")						//2. order 모델 생성
+	  public Order order() {
+	    return new Order();
+	  }
+
+	  @ModelAttribute(name = "taco")						//2. taco 모델 
+	  public Taco taco() {
+	    return new Taco();
+	  }
+
+	  @PostMapping
+	  public String processDesign(
+			  @Valid Taco design, 
+			  Errors errors, @ModelAttribute Order order) {
+		  if (errors.hasErrors()) {
+			 return "design";
+		  }
+
+		  Taco saved = tacoRepo.save(design);
+		  order.addDesign(saved);
+
+		  return "redirect:/orders/current";
+	  }
+
+}
+```
 3-5-2. OrderRepository   
 ```java
 package tacos.data;
