@@ -559,3 +559,77 @@ public interface OrderRepository {
 }
 ```
 3-5-2-2. JdbcOrderRepository   
+: Order의 save함수 구현   
+```java
+package tacos.data;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import tacos.Taco;
+import tacos.Order;
+
+@Repository
+public class JdbcOrderRepository implements OrderRepository {
+
+	private SimpleJdbcInsert orderInserter;
+	private SimpleJdbcInsert orderTacoInserter;
+	private ObjectMapper objectMapper;
+
+	@Autowired
+	public JdbcOrderRepository(JdbcTemplate jdbc) {
+	  this.orderInserter = new SimpleJdbcInsert(jdbc)				//원래 private JdbcTemplate jdbc; 한 다음에 주입시켜 주던것을 (p89참고) 이렇게 바꿈
+	      .withTableName("Taco_Order")						//Taco_Order 테이블에 데이터를 추가하기 위한 orderInserter 인스턴스 생성
+	      .usingGeneratedKeyColumns("id");						//db에서 자동 생성되는 id 사용
+
+	  this.orderTacoInserter = new SimpleJdbcInsert(jdbc)				//Taco_Order_Tacos 테이블에 데이터 추가하기 위한 orderTacoInserter 인스턴스 생성
+	      .withTableName("Taco_Order_Tacos");
+
+	  this.objectMapper = new ObjectMapper();					//Order 객체와 Taco 객체를 DB에 저장할 때 이용할 인스턴스
+	}
+
+	@Override
+	public Order save(Order order) {
+	  order.setPlacedAt(new Date());
+	  long orderId = saveOrderDetails(order);
+	  order.setId(orderId);
+	  List<Taco> tacos = order.getTacos();
+	  
+	  for (Taco taco : tacos) {
+	    saveTacoToOrder(taco, orderId);
+	  }
+
+	  return order;
+	}
+
+	private long saveOrderDetails(Order order) {
+	  @SuppressWarnings("unchecked")
+	  Map<String, Object> values =
+	      objectMapper.convertValue(order, Map.class);
+	  values.put("placedAt", order.getPlacedAt());
+
+	  long orderId =
+	      orderInserter
+	          .executeAndReturnKey(values)
+	          .longValue();
+	  return orderId;
+	}
+
+	private void saveTacoToOrder(Taco taco, long orderId) {
+	  Map<String, Object> values = new HashMap<>();
+	  values.put("tacoOrder", orderId);
+	  values.put("taco", taco.getId());
+	  orderTacoInserter.execute(values);
+	}
+
+}
+```
