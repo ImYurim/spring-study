@@ -544,10 +544,9 @@ public class Order {
 
 다룰 것
 - Taco 정보를 DB에 입력해줄때 아까 PreparedStatementCreator를 썼다면 지금은 좀 더 쉬운 SimpleJdbcInsert를 사용할 것이다.
-```
-3-5-2-1. 
-
-3-5-2. OrderRepository   
+``` 
+3-5-2-1. OrderRepository   
+: Order 정보를 저장해주는 함수를 적은 인터페이스 
 ```java
 package tacos.data;
 
@@ -559,3 +558,4 @@ public interface OrderRepository {
 	
 }
 ```
+3-5-2-2. JdbcOrderRepository   
