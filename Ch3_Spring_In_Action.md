@@ -298,6 +298,14 @@ public interface TacoRepository {
 ```
 3-5-1-2. JdbcTacoRepository   
 : TacoRepository(3-5-1-1)의 save함수 구현   
+```
+상황
+- 브라우저에서 Taco 정보를 입력받아서 Taco 객체에 정보를 담은 상태
+
+순서
+- Taco 테이블에 column name과 createdAt에 데이터 저장(saveTacoInfo함수), 고유 id도 저장(saveTacoInfo함수 리턴값으로 변수에 저장됨 나중에 쓰이므로)
+- Taco에 부여된 고유 id와 Taco를 만든 Ingredients id들을 Taco_Ingredients 테이블에 저장
+```
 ```java
 package tacos.data;
 
@@ -326,24 +334,25 @@ public class JdbcTacoRepository implements TacoRepository {
 	  }
 
 	  @Override
-	  public Taco save(Taco taco) {
-	    long tacoId = saveTacoInfo(taco);
-	    taco.setId(tacoId);
-	    
+	  public Taco save(Taco taco) {									//taco정보를 저장해보자
+	    long tacoId = saveTacoInfo(taco);								//새로운 taco 정보 저장 위한 함수(taco객체에 이름과 생성시간 데이터 입력해줌)
+	    taco.setId(tacoId);										//saveTacoInfo에서 전달받은 taco생성시 자동 생성되는 고유 Id도 데이터 입력해줌
+	    										//왜 saveTacoInfo함수 실행시 고유id까지 저장안해주고 따로 return을 해서 입력해주나?
+											//왜냐면 밑의 for문에서 saveIngredientToTaco 실행할때 tacoId 값을 써야하니까
 	    // 스프링 Converter를 우리가 구현한 IngredientByIdConverter의 Convert() 메서드가 이때 자동 실행된다.
-	    for (Ingredient ingredient : taco.getIngredients()) { 
-	      saveIngredientToTaco(ingredient, tacoId);
+	    for (Ingredient ingredient : taco.getIngredients()) { 							//새로 taco만들 때 어떤 재료들로 만드는지도 같이 저장해줌
+	      saveIngredientToTaco(ingredient, tacoId);									//saveIngredientToTaco함수를 이용해서 재료 정보를 타코에 저장
 	    }
 
 	    return taco;
 	  }
 
 	  private long saveTacoInfo(Taco taco) {
-	    taco.setCreatedAt(new Date());
-	    PreparedStatementCreator psc =
-	        new PreparedStatementCreatorFactory(
-	            "insert into Taco (name, createdAt) values (?, ?)",
-	            Types.VARCHAR, Types.TIMESTAMP
+	    taco.setCreatedAt(new Date());							//Taco class에서 @Data로 만들어진 getter setter 함수 중 하나로 생성 시간 입력해줌
+	    PreparedStatementCreator psc =							//psc 객체에 밑에 오는 쿼리문을 저장해줌(PreparedStatementCreatorFactory 생성자)
+	        new PreparedStatementCreatorFactory(						
+	            "insert into Taco (name, createdAt) values (?, ?)",				
+	            Types.VARCHAR, Types.TIMESTAMP						//첫번째와 두번째 물음표 타입 정해줌
 	        ).newPreparedStatementCreator(
 	           Arrays.asList(
 	               taco.getName(),
