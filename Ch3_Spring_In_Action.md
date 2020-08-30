@@ -687,3 +687,33 @@ public class OrderController {
 
 }
 ```
+4. 브라우저에서 입력한 Ingredient(String 타입)을 Ingredient 객체 타입으로 변환해야할 일이 생기면 자동으로 실행되는 convert()함수 Override   
+: tacos/web 에 IngredientByIdConverter.java 클래스 만들기
+```java
+package tacos.web;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
+
+import tacos.Ingredient;
+import tacos.data.IngredientRepository;
+
+@Component
+public class IngredientByIdConverter 
+		implements Converter<String, Ingredient> {
+
+	private IngredientRepository ingredientRepo;
+
+	@Autowired
+	public IngredientByIdConverter(IngredientRepository ingredientRepo) {
+	  this.ingredientRepo = ingredientRepo;
+	}
+	  
+	@Override
+	public Ingredient convert(String id) {
+	  return ingredientRepo.findById(id);				//ingredient id를 가지고 DB에서 해당 row 찾아낸 후 ingredient 객체로 생성시켜서 return 해줌
+	}
+
+}
+```
