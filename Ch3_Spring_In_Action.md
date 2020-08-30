@@ -353,23 +353,23 @@ public class JdbcTacoRepository implements TacoRepository {
 	        new PreparedStatementCreatorFactory(						
 	            "insert into Taco (name, createdAt) values (?, ?)",				
 	            Types.VARCHAR, Types.TIMESTAMP						//첫번째와 두번째 물음표 타입 정해줌
-	        ).newPreparedStatementCreator(
-	           Arrays.asList(
+	        ).newPreparedStatementCreator(							// ??						
+	           Arrays.asList(								//물음표들에 들어갈 값을 Taco객체에서 List형태로 가져와서 DB에 저장할 준비
 	               taco.getName(),
 	               new Timestamp(taco.getCreatedAt().getTime())));
 
-	    KeyHolder keyHolder = new GeneratedKeyHolder();
-	    jdbc.update(psc, keyHolder);
+	    KeyHolder keyHolder = new GeneratedKeyHolder();					//Taco가 새로 생겨날때마다 부여되는 고유 Id를 생성하는애
+	    jdbc.update(psc, keyHolder);							//PreparedStatementCreatorFactory로 만든 쿼리문, 저장할 데이터가 담긴 객체 psc와 고유 id생성하는 keyholder를 인자로 전달해서 DB에 저장함
 
-	    return keyHolder.getKey().longValue();
+	    return keyHolder.getKey().longValue();						//Taco 고유 id 리턴
 	  }
 
-	  private void saveIngredientToTaco(
-	          Ingredient ingredient, long tacoId) {
-	    jdbc.update(
+	  private void saveIngredientToTaco( 							//각 Taco id와 그 Taco를 만드는 ingredeint id를 Taco_Ingredients 테이블에 저장하는 함수
+	          Ingredient ingredient, long tacoId) {	
+	    jdbc.update(				
 	        "insert into Taco_Ingredients (taco, ingredient) " +
 	        "values (?, ?)",
-	        tacoId, ingredient.getId());
+	        tacoId, ingredient.getId());							//Taco id와 ingredient id를 테이블에 저장
 	  }
 
 }
