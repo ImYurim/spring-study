@@ -473,13 +473,80 @@ public class DesignTacoController {
 		  }
 
 		  Taco saved = tacoRepo.save(design);	//4. 3-5-1-2(바로위) 에서 구현했던 save함수를 사용해서 입력받은 Taco정보를 db에 저장 후(return Taco) saved 변수에 저장  
-		  order.addDesign(saved);			//5. order객체에 Taco객체 저장
+		  order.addDesign(saved);			//5. order객체에 Taco객체 저장 (Order 도메인(클래스)에 아직 addDesign함수 정의 안돼있어서 지금은 오류남)
 
 		  return "redirect:/orders/current";
 	  }
 
 }
 ```
+3-5-1-4. Order 도메인 수정    
+: addDesign 함수 추가해줌(바로 위 코드에서 오류났던것)   
+```java
+package tacos;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
+
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.CreditCardNumber;
+
+import lombok.Data;
+
+@Data
+public class Order {
+	
+	private Long id;
+    private Date placedAt;
+
+
+	@NotBlank(message="Name is required")
+	private String deliveryName;
+	
+	@NotBlank(message="Street is required")
+	private String deliveryStreet;
+	
+	@NotBlank(message="City is required")
+	private String deliveryCity;
+	
+	@NotBlank(message="State is required")
+	private String deliveryState;
+	
+	@NotBlank(message="Zip code is required")
+	private String deliveryZip;
+	
+	@CreditCardNumber(message="Not a valid credit card number")
+	private String ccNumber;
+	
+	@Pattern(regexp="^(0[1-9]|1[0-2])([\\/])([1-9][0-9])$",
+	           message="Must be formatted MM/YY")
+	private String ccExpiration;
+	
+	@Digits(integer=3, fraction=0, message="Invalid CVV")
+	private String ccCVV;
+	
+	private List<Taco> tacos = new ArrayList<>();
+	
+	public void addDesign(Taco design) {
+	  this.tacos.add(design);
+	}
+
+}
+```
+3-5-2. Order   
+```
+할일
+- Taco 정보를 DB에 저장해줬던 것과 마찬가지로 Taco_Order 테이블에 주문에만 관련된 데이터를 저장해주고 
+- Taco_Order_Tacos 테이블에 Order id와 Taco id를 저장해줄것이다. 
+
+다룰 것
+- Taco 정보를 DB에 입력해줄때 아까 PreparedStatementCreator를 썼다면 지금은 좀 더 쉬운 SimpleJdbcInsert를 사용할 것이다.
+```
+3-5-2-1. 
+
 3-5-2. OrderRepository   
 ```java
 package tacos.data;
